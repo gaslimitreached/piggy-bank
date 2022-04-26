@@ -17,6 +17,15 @@ contract PiggyBankTest is Test {
     function testDeposit() public {
         vm.expectEmit(true, true, true, true);
         emit Deposit(address(this), 1 ether);
-        bank.call{value: 1 ether}("");
+        (bool success,) = address(bank).call{value: 1 ether}("");
+        assertTrue(success);
+    }
+
+    function testWithdraw() public {
+        (bool success,) = address(bank).call{value: 1 ether}("");
+        assertTrue(success);
+        assertEq(address(this).balance, 0);
+        bank.withdraw();
+        assertEq(address(this).balance, 1 ether);
     }
 }
